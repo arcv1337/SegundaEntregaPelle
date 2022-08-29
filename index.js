@@ -171,14 +171,9 @@ else {
                 lista_productos_vendidos.forEach(prod_vendidos => {
                     console.log("---------------Vendiste hoy en total---------------")
                     console.log("Nombre del Producto: ", prod_vendidos.name);
-                    if (prod_vendidos.stock == 0)
-                    {
-                        console.log("Vendiste todo");
-                    }
-                    else {
-                    console.log("Cantidad vendida: ", prod_vendidos.stock);
-                    }
                     console.log("Ganancia en efectivo: ", gasto_efectivo);
+                    console.log("Te quedan: ", prod_vendidos.stock);
+                    
                 })
             }
 
