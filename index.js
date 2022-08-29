@@ -68,10 +68,11 @@ else {
         id = prompt("¿Qué deseas comprar? (Para salir escriba SALIR)");
         console.log(producto1.stock);
 
-
+        
 
     // SELECCION DE PRODUCTO
-    if (id == 1)
+    let encontrado = lista_productos.filter(elm => elm.id == id);
+    if (encontrado[0].id)
     {
         alert("Has seleccionado "+ producto1.name);
         let cant = parseInt(prompt("¿Cuantos " +producto1.name + " deseas llevar?"));
@@ -94,12 +95,11 @@ else {
         else if (metodopago == "tarjeta"){
             let cuotas = prompt("Perfecto, abona con tarjeta, seleccione las cuotas: (3/6/9)");
             precio_cuotas(cuotas, producto1, cant, producto1.name);  // LLAMO A LA FUNCION PARA CALCULAR X CUOTAS
-            cont_1++
             console.clear();
     }
     }
     }
-    else if (id == 2) {
+    else if (encontrado[1].id) {
         alert("Has seleccionado "+ producto2.name);
         let cant = parseInt(prompt("¿Cuantos " + producto2.name + " deseas llevar?"));
         if (cant > producto2.stock){
@@ -121,12 +121,11 @@ else {
         else if (metodopago == "tarjeta"){
             let cuotas = prompt("Perfecto, abona con tarjeta, seleccione las cuotas: (3/6/9)");
             precio_cuotas(cuotas, producto2, cant, producto2.name);  // LLAMO A LA FUNCION PARA CALCULAR X CUOTAS
-            cont_2++
             console.clear();
     }
     }
     }
-    else if (id == 3) {
+    else if (encontrado[2].id) {
         alert("Has seleccionado "+ producto3.name);
         let cant = parseInt(prompt("¿Cuantos " + producto3.name + " deseas llevar?"));
         if (cant > producto3.stock){
@@ -148,7 +147,6 @@ else {
         else if (metodopago == "tarjeta"){
             let cuotas = prompt("Perfecto, abona con tarjeta, seleccione las cuotas: (3/6/9)");
             precio_cuotas(cuotas, producto3, cant, producto3.name);  // LLAMO A LA FUNCION PARA CALCULAR X CUOTAS
-            cont_3++
             console.clear();
     }
     }
