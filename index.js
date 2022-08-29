@@ -54,7 +54,6 @@ if (edad < 18) {
 else {
     let nombre = prompt("Ingrese su nombre: ");
     alert("Bienvenido "+ nombre.toLowerCase() + "\nTu edad es: " +edad);
-    let id = "";
     do {
         for(let producto of lista_productos){
             console.log("\n")
@@ -64,15 +63,14 @@ else {
             console.log("Precio ", producto.price);
         }
         console.log("\n")
-        console.log("Aclaración: cuando ingrese salir, ademas de salir del programa, se le mostrara el total de lo que ha gastado en la tienda, en efectivo y también con tarjeta")
-        id = prompt("¿Qué deseas comprar? (Para salir escriba SALIR)");
-        console.log(producto1.stock);
-
+        console.log("Aclaración: cuando ingrese salir, ademas de salir del programa, se le mostrara el total de lo que ha gastado en la tienda, en efectivo y también con tarjeta");
+        let id = parseInt(prompt("¿Qué deseas comprar? (Para salir escriba SALIR)"));
+        let encontrado = lista_productos.filter(elemento => elemento.id == id);
+        console.log(encontrado[0]);
         
-
     // SELECCION DE PRODUCTO
-    let encontrado = lista_productos.filter(elm => elm.id == id);
-    if (encontrado[0].id)
+    
+    if (encontrado[0].id == 1)
     {
         alert("Has seleccionado "+ producto1.name);
         let cant = parseInt(prompt("¿Cuantos " +producto1.name + " deseas llevar?"));
@@ -99,7 +97,7 @@ else {
     }
     }
     }
-    else if (encontrado[1].id) {
+    else if (encontrado[0].id == 2) {
         alert("Has seleccionado "+ producto2.name);
         let cant = parseInt(prompt("¿Cuantos " + producto2.name + " deseas llevar?"));
         if (cant > producto2.stock){
@@ -125,7 +123,7 @@ else {
     }
     }
     }
-    else if (encontrado[2].id) {
+    else if (encontrado[0].id == 3) {
         alert("Has seleccionado "+ producto3.name);
         let cant = parseInt(prompt("¿Cuantos " + producto3.name + " deseas llevar?"));
         if (cant > producto3.stock){
