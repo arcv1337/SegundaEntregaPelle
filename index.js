@@ -1,231 +1,306 @@
-/// SIMULADOR DE COMPRAS EN TIENDA. (RAMA ESPECIFICA: EN ESTE CASO ALCOHOL)
-
-let text = document.getElementById("first");
-text.style.textAlign = "center";
-
-
-
+const containerDeProductos = document.querySelector('#containerDeProductos');;
+const containerCarrito = document.querySelector('#containerCarrito');
+const vaciarCarrito = document.querySelector('#vaciarCarrito')
+const img_cart = document.getElementById("img-carrito");
+const pagar = document.querySelector('#pagar')
 
 
 
+let titulo = document.getElementById("titulo");
+titulo.style.color = "grey";
+let mensaje = document.getElementById("mensaje");
+let compra = document.getElementById("compra");
+
+let inputCompra = document.createElement("input");
+let parrafo = document.createElement("p");
+
+let formulario = document.getElementById("formulario");
+let boton = document.createElement("button");
+let boton_2 = document.getElementById("proceso")
+boton_2.style.display = "none";
+img_cart.style.display = "none";
+
+
+// ARRAYS
+let lista_productos = [];
+let carrito = [];
+let totalCarro = [];
 
 
 
-class Productos{
-    constructor(id,name,price,stock){
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.stock = stock;
+const objetos = [{
+    marca: "",
+    nombre: 'Fernandito',
+    precio: 500,
+    id: 1,
+    stock: 50,
+    img: 'images/fernandito.png'
+},
+{
+    marca: "",
+    nombre: 'Licor de Uva',
+    precio: 700,
+    id: 2,
+    stock: 50,
+    img: 'images/licordeuva.png'
+},
+{
+    marca: "",
+    nombre: 'Fernet Branca',
+    precio: 950,
+    id: 3,
+    stock: 50,
+    img: 'images/fernetbranca.png'
+},
+{
+    marca: "",
+    nombre: 'Speed c/Vodka',
+    precio: 660,
+    id: 4,
+    stock: 50,
+    img: 'images/speedvodka.png'
+},
+]
+
+
+// CONSTRUCTOR
+class Alcoholes {
+    constructor({
+        marca,
+        nombre,
+        precio,
+        id,
+        stock,
+        img
+    }) {
+        this.marca = marca
+        this.nombre = nombre
+        this.precio = precio
+        this.id = id
+        this.stock = stock
+        this.img = img
+    }
+    total() {
+        totalCarro.push(this.precio*inputCompra.value); 
+    }
+    resta(){
+        totalCarro.push(-(this.precio*inputCompra.value))
+        console.log(totalCarro)
     }
 }
 
-let contra_admin = 1337;
-let lista_productos = [];    // ID // NAME // PRICE // STOCK
-let lista_productos_vendidos = [];
-
-let producto1 = new Productos(1, "FERNANDITO", 500, 50);
-let producto2 = new Productos(2, "FERNET BRANCA", 700, 50);
-let producto3 = new Productos(3, "LICOR DE UVA", 950, 50);
 
 
+// FUNCIONES
+function valido_edad(){
 
-cont_1 = 0
-cont_2 = 0 
-cont_3 = 0
+    let edad = document.getElementById("edad");
+    let nombre = document.getElementById("nombre");
+    if (nombre.value == ""){
+        parrafo.innerText = "Por favor, ingrese una nombre antes de ingresar";
+    }
+    else{
+    if(edad.value >= 18){
+        inputCompra.placeholder = "Ingrese la cantidad";
+        inputCompra.style.textAlign = "center";
+        compra.append(inputCompra);
+        console.log(inputCompra);
+        console.log("Logeo correcto");
+        parrafo.innerText = `\nBienvenido/a a la Tienda ${nombre.value}`
+        objetos.forEach(elm => {
+            // console.log(elm)
+            lista_productos.push(new Alcoholes(elm))
 
-
-
-lista_productos.push(producto1);
-lista_productos.push(producto2);
-lista_productos.push(producto3);
-
-console.log(lista_productos);
-
-console.log("¡Hola! \nBienvenido a la Tienda ");
-console.log("Si desea comprar alcohol, a continuación, escriba su edad");
-let edad = parseInt(prompt("Ingrese su edad: "));
-
-    // VALIDO LA EDAD PARA INGRESAR A ESTA SECCIÓN
-if (edad < 18) {
-    alert("Error: No se permite el ingreso a menores de edad.");
-}
-
-else {
-    let nombre = prompt("Ingrese su nombre: ");
-    alert("Bienvenido "+ nombre.toLowerCase() + "\nTu edad es: " +edad);
-    do {
-        for(let producto of lista_productos){
-            console.log("\n")
-            console.log("-------------------")
-            console.log("ID: ", producto.id);
-            console.log("Nombre: ", producto.name);
-            console.log("Precio ", producto.price);
+            plantillas(lista_productos)
+            formulario.style.display = "none";
+            titulo.style.display = "none";
+        })
+        mensaje.append(parrafo);
+        parrafo.style.fontFamily = "Verdana";
+        parrafo.style.fontSize = "25px";
+        parrafo.style.textAlign = "center";
+        parrafo.style.color = "green";
+    }
+    else if (edad.value < 18) {
+        if (edad.value < 15){
+            parrafo.innerText = "Por favor, ingrese una edad superior a 15 años";
+            mensaje.append(parrafo);
+            parrafo.style.fontFamily = "Verdana";
+            parrafo.style.fontSize = "25px";
+            parrafo.style.textAlign = "center";
+            parrafo.style.color = "orange";
         }
-        console.log("\n")
-        console.log("Aclaración: cuando ingrese salir, ademas de salir del programa, se le mostrara el total de lo que ha gastado en la tienda, en efectivo y también con tarjeta");
-        let id = parseInt(prompt("¿Qué deseas comprar? (Para salir escriba SALIR)"));
-        let encontrado = lista_productos.filter(elemento => elemento.id == id);
-        console.log(encontrado[0]);
-        
-    // SELECCION DE PRODUCTO
-    
-    if (encontrado[0].id == 1)
-    {
-        alert("Has seleccionado "+ producto1.name);
-        let cant = parseInt(prompt("¿Cuantos " +producto1.name + " deseas llevar?"));
-        if (cant > producto1.stock){
-            alert("No tenemos tanta cantidad de ese producto, nos quedan: " + producto1.stock + " " + producto1.name + " nada mas");
-        }
-        else {
-        alert("Vas a llevar " +  cant + " " +  producto1.name + "\nTotal: " +(cant*producto1.price));
-        let metodopago = prompt("¿Desea abonar en Efectivo o Tarjeta?");
-        metodopago = metodopago.toLowerCase();
-        if (metodopago == "efectivo"){
-            alert("Has abonado un total de: "+precio_total(producto1,cant));
-            let cant_11 = cant;
-            cont_1 = cant_11;
-            update_stock(producto1,cont_1);
-            lista_productos_vendidos.push(producto1);
-            alert("¡Gracias por tu compra!");
-            console.clear();
-        }
-        else if (metodopago == "tarjeta"){
-            let cuotas = prompt("Perfecto, abona con tarjeta, seleccione las cuotas: (3/6/9)");
-            precio_cuotas(cuotas, producto1, cant, producto1.name);  // LLAMO A LA FUNCION PARA CALCULAR X CUOTAS
-            console.clear();
-    }
-    }
-    }
-    else if (encontrado[0].id == 2) {
-        alert("Has seleccionado "+ producto2.name);
-        let cant = parseInt(prompt("¿Cuantos " + producto2.name + " deseas llevar?"));
-        if (cant > producto2.stock){
-            alert("No tenemos tanta cantidad de ese producto, nos quedan: " + producto2.stock + " " + producto2.name + " nada mas");
-        }
-        else {
-        alert("Vas a llevar " +  cant + " " +  producto2.name+ "\nTotal: " +(cant*producto2.price));
-        let metodopago = prompt("¿Desea abonar en Efectivo o Tarjeta?");
-        metodopago = metodopago.toLowerCase();
-        if (metodopago == "efectivo"){
-            alert("Has abonado un total de: "+precio_total(producto2,cant));
-            let cant_22 = cant;
-            cont_2 = cant_22;
-            update_stock(producto2,cont_2);
-            lista_productos_vendidos.push(producto2);
-            alert("¡Gracias por tu compra!");
-            console.clear();
-        }
-        else if (metodopago == "tarjeta"){
-            let cuotas = prompt("Perfecto, abona con tarjeta, seleccione las cuotas: (3/6/9)");
-            precio_cuotas(cuotas, producto2, cant, producto2.name);  // LLAMO A LA FUNCION PARA CALCULAR X CUOTAS
-            console.clear();
-    }
-    }
-    }
-    else if (encontrado[0].id == 3) {
-        alert("Has seleccionado "+ producto3.name);
-        let cant = parseInt(prompt("¿Cuantos " + producto3.name + " deseas llevar?"));
-        if (cant > producto3.stock){
-            alert("No tenemos tanta cantidad de ese producto, nos quedan: " + producto3.stock + " " + producto3.name + " nada mas");
-        }
-        else {
-        alert("Vas a llevar " +  cant + " " +  producto3.name+ "\nTotal: " +(cant*producto3.price));
-        let metodopago = prompt("¿Desea abonar en Efectivo o Tarjeta?");
-        metodopago = metodopago.toLowerCase();
-        if (metodopago == "efectivo"){
-            alert("Has abonado un total de: "+precio_total(producto3,cant));
-            let cant_33 = cant;
-            cont_3 = cant_33;
-            update_stock(producto3,cont_3); 
-            lista_productos_vendidos.push(producto3);
-            alert("¡Gracias por tu compra!");
-            console.clear();
-        }
-        else if (metodopago == "tarjeta"){
-            let cuotas = prompt("Perfecto, abona con tarjeta, seleccione las cuotas: (3/6/9)");
-            precio_cuotas(cuotas, producto3, cant, producto3.name);  // LLAMO A LA FUNCION PARA CALCULAR X CUOTAS
-            console.clear();
-    }
-    }
-    }
-
-    else if (id !=1 || id!=2 || id!=3 )
-    {   if (id == "SALIR") {
-        console.log("Compraste: " +producto1.name , "\nCantidad: " + parseInt(cont_1));
-        console.log("Compraste: " +producto2.name , "\nCantidad: " + parseInt(cont_2));
-        console.log("Compraste: " +producto3.name , "\nCantidad: " + parseInt(cont_3));
-        let gasto_efectivo = (cont_1 * producto1.price) + (cont_2 * producto2.price) + (cont_3 * producto3.price);
-        alert("Total gasto en efectivo: " +gasto_efectivo);
-        console.log(lista_productos);
-        let admin = parseInt(prompt("Si sos admin, ingresa la contraseña: "))
-        if (admin == contra_admin){
-            console.log("Bienvenido/a al panel de administración");
-            alert("(A) Mostrar lista de productos vendidos y cantidades")
-            let opciones = prompt("Ingrese una opción: ")
-            if (opciones == "A"){
-                lista_productos_vendidos.forEach(prod_vendidos => {
-                    console.log("---------------Vendiste hoy en total---------------")
-                    console.log("Nombre del Producto: ", prod_vendidos.name);
-                    console.log("Ganancia en efectivo: ", gasto_efectivo);
-                    console.log("Te quedan: ", prod_vendidos.stock);
-                    
-                })
-            }
-
-        }
-        else {
-            alert("¡Te esperamos nuevamente cuando quieras!");
-        }
-    }
-    
         else{
-        alert("Por favor, ingrese un ID de la lista.");
-        
+        console.log("No sos mayor de edad");
+        parrafo.innerText = "No sos mayor, proximamente sección para infantiles.";
+        mensaje.append(parrafo);
+        parrafo.style.fontFamily = "Verdana";
+        parrafo.style.fontSize = "25px";
+        parrafo.style.textAlign = "center";
+        parrafo.style.color = "red";
         }
     }
+}
+}
 
-    } while (id != "SALIR");
+document.addEventListener('click', (e) => {
+    if(e.target.classList.contains('button')){
+        if (inputCompra.value == ""){
+            alert("Por favor, ingrese una cantidad antes de agregar");
+        }
+        else if (inputCompra.value == 0) {
+            alert("Ingrese un numero mayor a 0");
+        }
+        else {  
+        img_cart.style.display = "inline";
+        addCarrito(e.target.id)
+}
+    }
+})
 
+
+
+function addCarrito(id){
+   let productoEncontrado = lista_productos.filter(elm => elm.id == id)
+   carrito.push(productoEncontrado[0])
+   productoEncontrado[0].total()
+   console.log(productoEncontrado[0].total);
+    totalCarrito()
+    renderCarrito()
+}
+
+function totalCarrito() {
+    let precios = totalCarro.reduce((a,b) => a + b)
+    let precio = document.querySelector('#precio').innerHTML = `$${precios}`
 }
 
 
+function renderCarrito(){
+    containerCarrito.innerHTML = ""
 
+    carrito.forEach(elm => {
+        containerCarrito.innerHTML += `
+        <th>${elm.nombre}</th>
+        <th>${elm.precio}</th>
+        <th class="btnEliminar" data-id="${elm.id}">X</th>
+        <th>${inputCompra.value}</th>
+        `
+    })
+}
 
+function plantillas(lista_productos) {
 
+    containerDeProductos.innerHTML = ""
+    lista_productos.forEach(elm => {
+        containerDeProductos.innerHTML += `
+        <div class="card">
+        <div class="card-img"<p class="text-title"></div><img src="./${elm.img}"  alt="imagen" class="tamaño"/>
+        
+        <div class="card-info">
+          <p class="text-title"> ${elm.marca}  ${elm.nombre} </p>
+        </div>
+        <div class="card-footer">
+        <span class="text-title">$${elm.precio}</span>
+        <div class="card-button">
+          <button id="${elm.id}" class="button">Agregar </button>
+        </div>
 
-function precio_total(producto, cant){
-    let precio_producto = producto.price * cant;
-    precio_producto = parseInt(precio_producto);
-    return precio_producto
+      </div>
+      ID: ${elm.id}</div>
+        `
+        
+
+    })
+
+pagar.addEventListener('click', (e) =>{
+    e.preventDefault()
+    let precios = totalCarro.reduce((a,b) => a + b)
+    if (totalCarro.length == 0) {
+        alert("No tienes productos para pagar");
     }
+    else {
+    let metodopago = prompt("¿Deséa abonar en Efectivo o Tarjeta?");
+
+    metodopago = metodopago.toLowerCase();
+    
+        if (metodopago == "efectivo")
+            {
+                alert("Has abonado un total de: " +precios);
+                alert("Gracias por tu compra!");
+                carrito.forEach(elm => {
+                    update_stock(elm, inputCompra.value);
+                })
+    
+            }
+        else if (metodopago == "tarjeta"){
+            let cuotas = prompt("Perfecto, abona con tarjeta, seleccione las cuotas: (3/6/9)");
+            console.log(cuotas);
+            console.log(precios);
+            precio_cuotas(cuotas, precios);
+            carrito.forEach(elm => {
+                update_stock(elm, inputCompra.value);
+            })
+    }
+        else {
+            alert("Por favor, ingrese un metodo de pago disponible.");
+        }
+}
+})
 
 
+document.addEventListener('click', (e) => {
+        if(e.target.classList.contains('btnEliminar')){
+            eliminarProducto(e.target.dataset.id)
+        }
+    } )
 
-
-function precio_cuotas(cantCuotas, precio, cant, nombreProd){
+function eliminarProducto(id){
+    let item = carrito.find(elm => elm.id == id)
+    item.resta()
+    totalCarrito()
+    let index = carrito.indexOf(item)
+    carrito.splice(index, 1)
+    renderCarrito() 
+    }
+    
+function precio_cuotas(cantCuotas, precios){
         if (cantCuotas == 3){ 
-            let porcentaje_3 = ((precio_total(precio,cant)*35)/100);  // EL INTERES 15 %
-            let precio_final = precio_total(precio,cant) + porcentaje_3;
-            alert("El precio final de " +nombreProd+ " es de "+precio_final);
+            let porcentaje_3 = (precios*15/100); // EL INTERES 15 %
+            let precio_final = precios + porcentaje_3;
+            alert("El precio final de su compra es de "+precio_final);
 
 
     }
         else if(cantCuotas == 6){
-            let porcentaje_6 = ((precio_total(precio,cant)*35)/100);  // EL INTERES 35 %
-            let precio_final = precio_total(precio,cant) + porcentaje_6;
-            alert("El precio final de " +nombreProd+ " es de "+precio_final);
+            let porcentaje_6 = (precios*35/100); // EL INTERES 15 %
+            let precio_final = precios + porcentaje_6;
+            alert("El precio final de su compra es de "+precio_final);
     }
         else if(cantCuotas == 9){
-            let porcentaje_9 = ((precio_total(precio,cant)*50)/100);  // EL INTERES 50 %
-            let precio_final = precio_total(precio,cant) + porcentaje_9;
-            alert("El precio final de " +nombreProd+ " es de "+precio_final);
+            let porcentaje_9 = (precios*50/100); // EL INTERES 15 %
+            let precio_final = precios + porcentaje_9;
+            alert("El precio final de su compra es de "+precio_final);
     }
 }
-function update_stock(producto,cant){
 
-    producto.stock = producto.stock -cant;
-    console.log("El nuevo stock de: ", producto.name, "es", producto.stock);
+
+function update_stock(elm,cant){
+
+    elm.stock = elm.stock -cant;
+    console.log("El nuevo stock de: ", elm.nombre, "es", elm.stock);
 
     }
+
+    
+vaciarCarrito.addEventListener('click', (e) => {
+        e.preventDefault();
+        carrito = []
+        totalCarro = []
+        renderCarrito()
+        let precio = document.querySelector('#precio').innerText = "$0"
+    } )
+    
+}
+
+
 

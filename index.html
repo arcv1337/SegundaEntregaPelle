@@ -1,60 +1,116 @@
 <!DOCTYPE html>
-<html lang=”en”>
-<head>
-    <meta charset=”UTF-8″ />
-    <title>Sistema de Compras</title>
-</head>
-<body>
-<h1 id="first">Simulador Sistema de Compras</h1>
-<table class="default">
-<h3>Alcoholes</h3>
-  <tr>
-
-    <th>Fernandito</th>
-
-    <th>Fernet Branca</th>
-
-    <th>Licor de UVA</th>
-
-  </tr>
-
-  <tr>
-
-    <td>ID: 1</td>
-
-    <td>ID: 2</td>
-
-    <td>ID: 3</td>
-
-  </tr>
-
-  <tr>
-
-    <td>Precio: $500</td>
-
-    <td>Precio: $700</td>
-
-    <td>Precio: $950</td>
-
-  </tr>
-
-  <tr>
-
-    <td>Stock: <font color="green"><i>Disponible</i></font></td>
-
-    <td>Stock: <font color="green"><i>Disponible</i></font></td>
-
-    <td>Stock: <font color="green"><i>Disponible</i></font></td>
-
-  </tr>
-</table>
-<p>Ingrese su edad: <input type="number" name="edad"> <input type="submit" value="Enviar"></p>
-<p>Ingrese su nombre: <input type="text" name="name"> <input type="submit" value="Enviar"></p>
-<p>Ingrese el ID del producto: <input type="text" name="id"> <input type="submit" value="Enviar"></p>
-
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Mayorista - Example</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
+    </head>
+    <body>
+      <header>
+        <!-- Responsive navbar-->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand" href="#">Tienda</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Home</a></li>
+                        <ul>
+                          <li class="submenu">
+                                  <img src="images/cart.png" id="img-carrito" class="cart">
+                                  <div class="carrito" id="carrito">
+                                          <table class="carrito__color" id="lista-carrito">
+                                              <thead>
+                                                  <tr>
+                                                      <th>nombre</th>
+                                                      <th>precio</th>
+                                                      <th>cant</th>
+                                                      <th></th>
+                                                  </tr>
+                                              </thead>
+                                              <tbody id="containerCarrito"></tbody>
+                                              <tfoot>
+                                                  <th id="precio"></th>
+                                              </tfoot>
+                                          </table>
+                                          <button id="vaciarCarrito" type="button" class="btn btn-danger" class="btnVaciar">Vaciar Carrito</button>
+                                          <button type="button" class="btn btn-success" id="pagar">Pagar</button>
+                                  </div>
+                          </li>
+                    
+                    </ul>
+                </div>
+            </div>
+        </nav>
+      </header>
+        <!-- Page content-->
 
 
 
-<script src="index.js"></script>
-</body>
+
+
+
+
+
+
+        <main>
+          <div class="text-center mt-5">
+            <h1>¡Bienvenido al Mayorista de bebidas Alcoholicas!</h1>
+            
+            <h4 id="titulo">Antes de mostrar el menu, por favor, ingrese su nombre y edad.
+            </h4>
+            <div class="container">
+              <div class="abs-center" id="formulario">
+                <section class="validador" id="form">
+                      <input id="nombre" type="text" placeholder="Ingresa tu nombre">
+                      <input id="edad" type="number" min="1" placeholder="Ingresa tu edad" name="" id="">
+                      <button onclick="valido_edad()">Ingresar</button> 
+              </section>
+              
+              </div>
+              <div id="mensaje"></div>
+            </div>
+        
+            <div class="productosGrid" id="containerDeProductos">
+
+            </div>
+            
+
+            <div class="compra" id ="compra">
+            </div>
+            <button id="proceso" class="btn btn-outline-dark">Procesar</button>
+            
+        </main>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <footer>
+        <div class="footer">
+            by 1337 ❤️
+          </div>
+        </footer>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="index.js"></script>
+    </body>
 </html>
