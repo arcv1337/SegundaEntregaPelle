@@ -25,6 +25,7 @@ img_cart.style.display = "none";
 let lista_productos = [];
 let carrito = [];
 let totalCarro = [];
+let arreglo_usuarios = [];
 
 
 
@@ -89,20 +90,55 @@ class Alcoholes {
     }
 }
 
+let boton2 = document.getElementById("boton2");
+let boton3 = document.getElementById("boton3");
+boton3.addEventListener("click", set_data );
+boton2.addEventListener('click', recuperar);
+
+
+
+function set_data(){
+
+
+    let name = document.getElementById("nombre");
+    let age = document.getElementById("edad");
+
+    sessionStorage.setItem("name", name.value);
+    sessionStorage.setItem("age", age.value);
+
+
+
+    
+}
+
+
+function recuperar(){
+    
+    let name = document.getElementById("nombre");
+    let age = document.getElementById("edad");
+
+    name.value = sessionStorage.getItem("name");
+    age.value = sessionStorage.getItem("age");
+
+}
+
 
 
 // FUNCIONES
 function valido_edad(){
-
     let edad = document.getElementById("edad");
     let nombre = document.getElementById("nombre");
     if (nombre.value == ""){
-        parrafo.innerText = "Por favor, ingrese una nombre antes de ingresar";
+        parrafo.innerText = "Por favor, inserte un nombre antes de ingresar";
     }
     else{
     if(edad.value >= 18){
+        boton2.style.display = "none";
+        boton3.style.display = "none";
         inputCompra.placeholder = "Ingrese la cantidad";
         inputCompra.style.textAlign = "center";
+        inputCompra.style.backgroundColor = "black";
+        inputCompra.style.color = "red";
         compra.append(inputCompra);
         console.log(inputCompra);
         console.log("Logeo correcto");
@@ -119,7 +155,7 @@ function valido_edad(){
         parrafo.style.fontFamily = "Verdana";
         parrafo.style.fontSize = "25px";
         parrafo.style.textAlign = "center";
-        parrafo.style.color = "green";
+        parrafo.style.color = "white";
     }
     else if (edad.value < 18) {
         if (edad.value < 15){
@@ -230,7 +266,7 @@ pagar.addEventListener('click', (e) =>{
                 carrito.forEach(elm => {
                     update_stock(elm, inputCompra.value);
                 })
-    
+                reset_carrito()
             }
         else if (metodopago == "tarjeta"){
             let cuotas = prompt("Perfecto, abona con tarjeta, seleccione las cuotas: (3/6/9)");
@@ -240,6 +276,7 @@ pagar.addEventListener('click', (e) =>{
             carrito.forEach(elm => {
                 update_stock(elm, inputCompra.value);
             })
+            reset_carrito()
     }
         else {
             alert("Por favor, ingrese un metodo de pago disponible.");
@@ -291,6 +328,14 @@ function update_stock(elm,cant){
 
     }
 
+
+ function reset_carrito () {
+        carrito = [];
+        totalCarro = [];
+        renderCarrito();
+        document.querySelector ("#precio ").innerText = "$0";
+    }
+
     
 vaciarCarrito.addEventListener('click', (e) => {
         e.preventDefault();
@@ -301,6 +346,4 @@ vaciarCarrito.addEventListener('click', (e) => {
     } )
     
 }
-
-
 

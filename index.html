@@ -61,23 +61,23 @@
 
         <main>
           <div class="text-center mt-5">
-            <h1>¡Bienvenido al Mayorista de bebidas Alcoholicas!</h1>
+            <h1 class="text-info">¡Bienvenido al Mayorista de bebidas Alcoholicas!</h1>
             
-            <h4 id="titulo">Antes de mostrar el menu, por favor, ingrese su nombre y edad.
+            <h4 id="titulo" class="text-white">Antes de mostrar el menu, por favor, ingrese su nombre y edad.
             </h4>
             <div class="container">
               <div class="abs-center" id="formulario">
                 <section class="validador" id="form">
                       <input id="nombre" type="text" placeholder="Ingresa tu nombre">
-                      <input id="edad" type="number" min="1" placeholder="Ingresa tu edad" name="" id="">
-                      <button onclick="valido_edad()">Ingresar</button> 
+                      <input id="edad" type="number" min="1" placeholder="Ingresa tu edad" name="" id="">     
               </section>
-              
               </div>
+              <button id="boton2" class="btn btn-secondary" onclick="valido_edad()">Ingresar</button> 
+              <button class="btn btn-warning" id="boton3">Recordarme</button> 
               <div id="mensaje"></div>
             </div>
         
-            <div class="productosGrid" id="containerDeProductos">
+            <div class="productosGrid" id="containerDeProductos" >
 
             </div>
             
