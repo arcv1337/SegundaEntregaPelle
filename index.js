@@ -25,7 +25,7 @@ img_cart.style.display = "none";
 let lista_productos = [];
 let carrito = [];
 let totalCarro = [];
-let arreglo_usuarios = [];
+let carritoSave = [];
 
 
 
@@ -88,6 +88,7 @@ class Alcoholes {
         totalCarro.push(-(this.precio*inputCompra.value))
         console.log(totalCarro)
     }
+    
 }
 
 let boton2 = document.getElementById("boton2");
@@ -143,6 +144,7 @@ function valido_edad(){
         console.log(inputCompra);
         console.log("Logeo correcto");
         parrafo.innerText = `\nBienvenido/a a la Tienda ${nombre.value}`
+        recuCarrito();
         objetos.forEach(elm => {
             // console.log(elm)
             lista_productos.push(new Alcoholes(elm))
@@ -156,10 +158,11 @@ function valido_edad(){
         parrafo.style.fontSize = "25px";
         parrafo.style.textAlign = "center";
         parrafo.style.color = "white";
+        
     }
     else if (edad.value < 18) {
         if (edad.value < 15){
-            parrafo.innerText = "Por favor, ingrese una edad superior a 15 años";
+            parrafo.innerText   = "Por favor, ingrese una edad superior a 15 años";
             mensaje.append(parrafo);
             parrafo.style.fontFamily = "Verdana";
             parrafo.style.fontSize = "25px";
@@ -188,21 +191,54 @@ document.addEventListener('click', (e) => {
             alert("Ingrese un numero mayor a 0");
         }
         else {  
+        
         img_cart.style.display = "inline";
         addCarrito(e.target.id)
 }
     }
 })
 
+function saveCarrito(){
+    carrito.forEach(elm => {
+        let productosGuardar = {nombre: elm.nombre, precio: elm.precio, id: elm.id}
+        carritoSave.push(productosGuardar);
+        let carrito_json = JSON.stringify(carritoSave);
+        localStorage.setItem("carrito_json", carrito_json);
+        console.log(carrito_json);
+            })
+}
 
+
+function recuCarrito(id){
+    let carritoGuardado = localStorage.getItem("carrito_json");
+    img_cart.style.display = "inline";
+    carritoGuardado = JSON.parse(carritoGuardado);
+        carritoSave.push(lista_productos);
+            
+    
+}
+
+function renderCarritoSave(){
+    containerCarrito.innerHTML = ""
+
+    carritoSave.forEach(elm => {
+        containerCarrito.innerHTML += `
+        <th>${elm.nombre}</th>
+        <th>${elm.precio}</th>
+        <th class="btnEliminar" data-id="${elm.id}">X</th>
+        <th>${inputCompra.value}</th>
+        `
+    })
+}
 
 function addCarrito(id){
-   let productoEncontrado = lista_productos.filter(elm => elm.id == id)
-   carrito.push(productoEncontrado[0])
-   productoEncontrado[0].total()
-   console.log(productoEncontrado[0].total);
-    totalCarrito()
-    renderCarrito()
+    let productoEncontrado = lista_productos.filter(elm => elm.id == id)
+    carrito.push(productoEncontrado[0])
+    productoEncontrado[0].total()
+    console.log(productoEncontrado[0].total);
+        totalCarrito()
+        renderCarrito()
+        saveCarrito()
 }
 
 function totalCarrito() {
@@ -223,6 +259,7 @@ function renderCarrito(){
         `
     })
 }
+
 
 function plantillas(lista_productos) {
 
