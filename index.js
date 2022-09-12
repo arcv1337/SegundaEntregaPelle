@@ -144,7 +144,7 @@ function valido_edad(){
         console.log(inputCompra);
         console.log("Logeo correcto");
         parrafo.innerText = `\nBienvenido/a a la Tienda ${nombre.value}`
-        recuCarrito();
+        recuCarrito()
         objetos.forEach(elm => {
             // console.log(elm)
             lista_productos.push(new Alcoholes(elm))
@@ -200,7 +200,7 @@ document.addEventListener('click', (e) => {
 
 function saveCarrito(){
     carrito.forEach(elm => {
-        let productosGuardar = {nombre: elm.nombre, precio: elm.precio, id: elm.id}
+        let productosGuardar = {marca: elm.marca, nombre: elm.nombre, precio: elm.precio, id: elm.id, stock: elm.stock, img: elm.img}
         carritoSave.push(productosGuardar);
         let carrito_json = JSON.stringify(carritoSave);
         localStorage.setItem("carrito_json", carrito_json);
@@ -209,25 +209,25 @@ function saveCarrito(){
 }
 
 
-function recuCarrito(id){
-    let carritoGuardado = localStorage.getItem("carrito_json");
+function recuCarrito(){
     img_cart.style.display = "inline";
+    let carritoGuardado = localStorage.getItem("carrito_json");
     carritoGuardado = JSON.parse(carritoGuardado);
-        carritoSave.push(lista_productos);
-            
-    
+    console.log(carritoGuardado)
+    carritoSave.push(carritoGuardado);
+    console.log(carritoSave);
+    renderCarritoSave()
 }
 
 function renderCarritoSave(){
     containerCarrito.innerHTML = ""
-
-    carritoSave.forEach(elm => {
+    carritoSave[0].forEach(elm => {
         containerCarrito.innerHTML += `
         <th>${elm.nombre}</th>
         <th>${elm.precio}</th>
         <th class="btnEliminar" data-id="${elm.id}">X</th>
         <th>${inputCompra.value}</th>
-        `
+        ` 
     })
 }
 
