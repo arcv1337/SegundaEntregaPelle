@@ -216,7 +216,7 @@ function recuCarrito(){
     console.log(carritoGuardado)
     carritoSave.push(carritoGuardado);
     console.log(carritoSave);
-    renderCarritoSave()
+    renderCarritoSave() // LISTO
 }
 
 function renderCarritoSave(){
