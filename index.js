@@ -72,7 +72,8 @@ class Alcoholes {
         precio,
         id,
         stock,
-        img
+        img,
+        cant
     }) {
         this.marca = marca
         this.nombre = nombre
@@ -80,6 +81,7 @@ class Alcoholes {
         this.id = id
         this.stock = stock
         this.img = img
+        this.cant = cant
     }
     total() {
         totalCarro.push(this.precio*inputCompra.value); 
@@ -232,6 +234,7 @@ function renderCarritoSave(){
 }
 
 function addCarrito(id){
+    carritoSave = [];
     let productoEncontrado = lista_productos.filter(elm => elm.id == id)
     carrito.push(productoEncontrado[0])
     productoEncontrado[0].total()
@@ -368,6 +371,7 @@ function update_stock(elm,cant){
 
  function reset_carrito () {
         carrito = [];
+        carritoSave = [];
         totalCarro = [];
         renderCarrito();
         document.querySelector ("#precio ").innerText = "$0";
@@ -377,6 +381,7 @@ function update_stock(elm,cant){
 vaciarCarrito.addEventListener('click', (e) => {
         e.preventDefault();
         carrito = []
+        carritoSave = [];
         totalCarro = []
         renderCarrito()
         let precio = document.querySelector('#precio').innerText = "$0"
