@@ -125,8 +125,6 @@ function recuperar(){
 
 }
 
-
-
 // FUNCIONES
 function valido_edad(){
     let edad = document.getElementById("edad");
@@ -146,7 +144,6 @@ function valido_edad(){
         console.log(inputCompra);
         console.log("Logeo correcto");
         parrafo.innerText = `\nBienvenido/a a la Tienda ${nombre.value}`
-        recuCarrito()
         objetos.forEach(elm => {
             // console.log(elm)
             lista_productos.push(new Alcoholes(elm))
@@ -160,6 +157,7 @@ function valido_edad(){
         parrafo.style.fontSize = "25px";
         parrafo.style.textAlign = "center";
         parrafo.style.color = "white";
+        recuCarrito()
         
     }
     else if (edad.value < 18) {
@@ -206,6 +204,7 @@ function saveCarrito(){
         carritoSave.push(productosGuardar);
         let carrito_json = JSON.stringify(carritoSave);
         localStorage.setItem("carrito_json", carrito_json);
+        
         console.log(carrito_json);
             })
 }
@@ -234,6 +233,7 @@ function renderCarritoSave(){
 }
 
 function addCarrito(id){
+    localStorage.clear();
     carritoSave = [];
     let productoEncontrado = lista_productos.filter(elm => elm.id == id)
     carrito.push(productoEncontrado[0])
@@ -384,6 +384,7 @@ vaciarCarrito.addEventListener('click', (e) => {
         carritoSave = [];
         totalCarro = []
         renderCarrito()
+        renderCarritoSave()
         let precio = document.querySelector('#precio').innerText = "$0"
     } )
     
