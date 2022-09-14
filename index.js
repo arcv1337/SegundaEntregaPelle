@@ -7,7 +7,6 @@ const pagar = document.querySelector('#pagar')
 
 
 let titulo = document.getElementById("titulo");
-titulo.style.color = "grey";
 let mensaje = document.getElementById("mensaje");
 let compra = document.getElementById("compra");
 
@@ -17,8 +16,10 @@ let parrafo = document.createElement("p");
 let formulario = document.getElementById("formulario");
 let boton = document.createElement("button");
 let boton_2 = document.getElementById("proceso")
+
 boton_2.style.display = "none";
 img_cart.style.display = "none";
+titulo.style.color = "grey";
 
 
 // ARRAYS
@@ -309,9 +310,10 @@ pagar.addEventListener('click', (e) =>{
                 reset_carrito()
             }
         else if (metodopago == "tarjeta"){
-            let cuotas = prompt("Perfecto, abona con tarjeta, seleccione las cuotas: (3/6/9)");
+            cuotas = prompt("Perfecto, abona con tarjeta, seleccione las cuotas: (3/6/9)");
             console.log(cuotas);
             console.log(precios);
+            cuotas = parseInt(cuotas);
             precio_cuotas(cuotas, precios);
             carrito.forEach(elm => {
                 update_stock(elm, inputCompra.value);
@@ -341,20 +343,20 @@ function eliminarProducto(id){
     }
     
 function precio_cuotas(cantCuotas, precios){
-        if (cantCuotas == 3){ 
+        if (cantCuotas === 3){ 
             let porcentaje_3 = (precios*15/100); // EL INTERES 15 %
             let precio_final = precios + porcentaje_3;
             alert("El precio final de su compra es de "+precio_final);
 
 
     }
-        else if(cantCuotas == 6){
-            let porcentaje_6 = (precios*35/100); // EL INTERES 15 %
+        else if(cantCuotas === 6){
+            let porcentaje_6 = (precios*35/100); // EL INTERES 35 %
             let precio_final = precios + porcentaje_6;
             alert("El precio final de su compra es de "+precio_final);
     }
-        else if(cantCuotas == 9){
-            let porcentaje_9 = (precios*50/100); // EL INTERES 15 %
+        else if(cantCuotas === 9){
+            let porcentaje_9 = (precios*50/100); // EL INTERES 50 %
             let precio_final = precios + porcentaje_9;
             alert("El precio final de su compra es de "+precio_final);
     }
@@ -383,7 +385,7 @@ vaciarCarrito.addEventListener('click', (e) => {
         carrito = []
         carritoSave = [];
         totalCarro = []
-        renderCarrito()
+        renderCarrito() 
         renderCarritoSave()
         let precio = document.querySelector('#precio').innerText = "$0"
     } )
