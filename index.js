@@ -83,6 +83,7 @@ class Alcoholes {
         this.stock = stock
         this.img = img
         this.cant = cant
+
     }
     total() {
         totalCarro.push(this.precio*inputCompra.value); 
@@ -115,6 +116,10 @@ function set_data(){
     
 }
 
+function borrarLocalStorage(){
+    localStorage.removeItem("carrito_json");
+}
+
 
 function recuperar(){
     
@@ -125,7 +130,6 @@ function recuperar(){
     age.value = sessionStorage.getItem("age");
 
 }
-
 // FUNCIONES
 function valido_edad(){
     let edad = document.getElementById("edad");
@@ -185,6 +189,7 @@ function valido_edad(){
 
 document.addEventListener('click', (e) => {
     if(e.target.classList.contains('button')){
+        
         if (inputCompra.value == ""){
             alert("Por favor, ingrese una cantidad antes de agregar");
         }
@@ -201,11 +206,10 @@ document.addEventListener('click', (e) => {
 
 function saveCarrito(){
     carrito.forEach(elm => {
-        let productosGuardar = {marca: elm.marca, nombre: elm.nombre, precio: elm.precio, id: elm.id, stock: elm.stock, img: elm.img}
+        let productosGuardar = {marca: elm.marca, nombre: elm.nombre, precio: elm.precio, id: elm.id, stock: elm.stock, img: elm.img, cant: inputCompra.value}
         carritoSave.push(productosGuardar);
         let carrito_json = JSON.stringify(carritoSave);
         localStorage.setItem("carrito_json", carrito_json);
-        
         console.log(carrito_json);
             })
 }
@@ -221,6 +225,7 @@ function recuCarrito(){
     renderCarritoSave() // LISTO
 }
 
+
 function renderCarritoSave(){
     containerCarrito.innerHTML = ""
     carritoSave[0].forEach(elm => {
@@ -228,13 +233,12 @@ function renderCarritoSave(){
         <th>${elm.nombre}</th>
         <th>${elm.precio}</th>
         <th class="btnEliminar" data-id="${elm.id}">X</th>
-        <th>${inputCompra.value}</th>
+        <th>${elm.cant}</th>
         ` 
     })
 }
 
 function addCarrito(id){
-    localStorage.clear();
     carritoSave = [];
     let productoEncontrado = lista_productos.filter(elm => elm.id == id)
     carrito.push(productoEncontrado[0])
@@ -247,13 +251,12 @@ function addCarrito(id){
 
 function totalCarrito() {
     let precios = totalCarro.reduce((a,b) => a + b)
-    let precio = document.querySelector('#precio').innerHTML = `$${precios}`
+    document.querySelector('#precio').innerHTML = `$${precios}`
 }
 
 
 function renderCarrito(){
     containerCarrito.innerHTML = ""
-
     carrito.forEach(elm => {
         containerCarrito.innerHTML += `
         <th>${elm.nombre}</th>
@@ -382,12 +385,13 @@ function update_stock(elm,cant){
     
 vaciarCarrito.addEventListener('click', (e) => {
         e.preventDefault();
+        document.querySelector('#precio').innerText = "$0"
+        borrarLocalStorage()
         carrito = []
         carritoSave = [];
         totalCarro = []
         renderCarrito() 
         renderCarritoSave()
-        let precio = document.querySelector('#precio').innerText = "$0"
     } )
     
 }
