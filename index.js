@@ -228,14 +228,19 @@ function recuCarrito(){
 
 function renderCarritoSave(){
     containerCarrito.innerHTML = ""
-    carritoSave[0].forEach(elm => {
-        containerCarrito.innerHTML += `
-        <th>${elm.nombre}</th>
-        <th>${elm.precio}</th>
-        <th class="btnEliminar" data-id="${elm.id}">X</th>
-        <th>${elm.cant}</th>
-        ` 
-    })
+    if(carritoSave[0] != null){
+        carritoSave[0].forEach(elm => {
+            containerCarrito.innerHTML += `
+            <th>${elm.nombre}</th>
+            <th>${elm.precio}</th>
+            <th class="btnEliminar" data-id="${elm.id}">X</th>
+            <th>${elm.cant}</th>
+            ` 
+        })
+    }
+    else{
+        containerCarrito.innerHTML = ""
+    }
 }
 
 function addCarrito(id){

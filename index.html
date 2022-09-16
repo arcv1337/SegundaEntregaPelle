@@ -9,6 +9,7 @@
         <!-- Favicon-->
         <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
         <!-- Core theme CSS (includes Bootstrap)-->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link href="css/styles.css" rel="stylesheet" />
     </head>
     <body>
@@ -20,7 +21,7 @@
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="index.html">Home</a></li>
+                        <li class="nav-item"><a id="home" class="nav-link active" aria-current="page" href="index.html">Home</a></li>
                         <ul>
                           <li class="submenu">
                                   <img src="images/cart.png" id="img-carrito" class="cart">
@@ -28,10 +29,14 @@
                                           <table class="carrito__color" id="lista-carrito">
                                               <thead>
                                                   <tr>
-                                                      <th>nombre</th>
-                                                      <th>precio</th>
-                                                      <th>cant</th>
-                                                      <th></th>
+                                                      <th class="nombreCant">Nombre</th>
+                                                
+                                                      <th class="precioCant">Precio</th>
+                                                      
+                                                      <th class="cartCant">Cant</th>
+                                                  
+                                                    
+                                                    
                                                   </tr>
                                               </thead>
                                               <tbody id="containerCarrito"></tbody>
@@ -100,7 +105,7 @@
 
 
 
-
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 
 
 
