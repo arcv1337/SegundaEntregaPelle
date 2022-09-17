@@ -2,8 +2,15 @@ const containerDeProductos = document.querySelector('#containerDeProductos');;
 const containerCarrito = document.querySelector('#containerCarrito');
 const vaciarCarrito = document.querySelector('#vaciarCarrito')
 const img_cart = document.getElementById("img-carrito");
-const pagar = document.querySelector('#pagar')
-
+const pagar = document.querySelector('#pagar');
+const pagar_save = document.querySelector('#pagar_save');
+const swalWithBootstrapButtons = Swal.mixin({
+    customClass: {
+      confirmButton: 'btn btn-success',
+      cancelButton: 'btn btn-danger'
+    },
+    buttonsStyling: false
+  })
 
 
 let titulo = document.getElementById("titulo");
@@ -20,7 +27,8 @@ let boton_2 = document.getElementById("proceso")
 boton_2.style.display = "none";
 img_cart.style.display = "none";
 titulo.style.color = "grey";
-
+pagar_save.style.display = "none";
+pagar.style.display = "none";
 
 // ARRAYS
 let lista_productos = [];
@@ -35,7 +43,7 @@ const objetos = [{
     nombre: 'Fernandito',
     precio: 500,
     id: 1,
-    stock: 50,
+    stock: 10000,
     img: 'images/fernandito.png'
 },
 {
@@ -43,7 +51,7 @@ const objetos = [{
     nombre: 'Licor de Uva',
     precio: 700,
     id: 2,
-    stock: 50,
+    stock: 10000,
     img: 'images/licordeuva.png'
 },
 {
@@ -51,7 +59,7 @@ const objetos = [{
     nombre: 'Fernet Branca',
     precio: 950,
     id: 3,
-    stock: 50,
+    stock: 10000,
     img: 'images/fernetbranca.png'
 },
 {
@@ -59,7 +67,7 @@ const objetos = [{
     nombre: 'Speed c/Vodka',
     precio: 660,
     id: 4,
-    stock: 50,
+    stock: 10000,
     img: 'images/speedvodka.png'
 },
 ]
@@ -222,11 +230,19 @@ function recuCarrito(){
     console.log(carritoGuardado)
     carritoSave.push(carritoGuardado);
     console.log(carritoSave);
-    renderCarritoSave() // LISTO
+    if (carritoSave[0] != null){
+        totalCarritoSave(carritoGuardado)
+        renderCarritoSave() // LISTO
+    }
+    else {
+        console.log("No había productos guardados");
+    }
 }
 
 
 function renderCarritoSave(){
+    pagar.style.display = "none";
+    pagar_save.style.display = "inline";
     containerCarrito.innerHTML = ""
     if(carritoSave[0] != null){
         carritoSave[0].forEach(elm => {
@@ -235,6 +251,7 @@ function renderCarritoSave(){
             <th>${elm.precio}</th>
             <th class="btnEliminar" data-id="${elm.id}">X</th>
             <th>${elm.cant}</th>
+            
             ` 
         })
     }
@@ -256,11 +273,24 @@ function addCarrito(id){
 
 function totalCarrito() {
     let precios = totalCarro.reduce((a,b) => a + b)
-    document.querySelector('#precio').innerHTML = `$${precios}`
+    document.querySelector('#precio').innerHTML = `Total $${precios}`
+    
 }
 
+let sum = 0;
+function totalCarritoSave(carritoGuardado){
+    
+    for (let i = 0; i < carritoGuardado.length; i++) {
+    sum += carritoGuardado[i].precio*carritoGuardado[i].cant;
+    }
+    console.log(sum);
+    
+    document.querySelector('#precio').innerHTML = `Total $${sum}`
+}
 
 function renderCarrito(){
+    pagar_save.style.display = "none";
+    pagar.style.display = "inline";
     containerCarrito.innerHTML = ""
     carrito.forEach(elm => {
         containerCarrito.innerHTML += `
@@ -297,41 +327,30 @@ function plantillas(lista_productos) {
 
     })
 
+    
+
 pagar.addEventListener('click', (e) =>{
+    pagar_save.style.display = "none";
     e.preventDefault()
-    let precios = totalCarro.reduce((a,b) => a + b)
     if (totalCarro.length == 0) {
-        alert("No tienes productos para pagar");
+        console.log("No tienes productos para pagar");
+    }
+    else {  
+        pagar_first()
+    
+}
+})
+
+pagar_save.addEventListener('click', (e) =>{
+    pagar.style.display = "none";
+    e.preventDefault()
+    if (carritoSave.length == 0) {
+        console.log("No tienes productos para pagar, ya compraste.")
     }
     else {
-    let metodopago = prompt("¿Deséa abonar en Efectivo o Tarjeta?");
-
-    metodopago = metodopago.toLowerCase();
-    
-        if (metodopago == "efectivo")
-            {
-                alert("Has abonado un total de: " +precios);
-                alert("Gracias por tu compra!");
-                carrito.forEach(elm => {
-                    update_stock(elm, inputCompra.value);
-                })
-                reset_carrito()
-            }
-        else if (metodopago == "tarjeta"){
-            cuotas = prompt("Perfecto, abona con tarjeta, seleccione las cuotas: (3/6/9)");
-            console.log(cuotas);
-            console.log(precios);
-            cuotas = parseInt(cuotas);
-            precio_cuotas(cuotas, precios);
-            carrito.forEach(elm => {
-                update_stock(elm, inputCompra.value);
-            })
-            reset_carrito()
-    }
-        else {
-            alert("Por favor, ingrese un metodo de pago disponible.");
+        pagarSave()
         }
-}
+        
 })
 
 
@@ -341,6 +360,55 @@ document.addEventListener('click', (e) => {
         }
     } )
 
+function pagar_first(){
+        Swal.fire({
+            title: "Metodo de Pago",
+            text: "¿Desea pagar en efectivo o tarjeta?",
+            input: 'text',
+            showCancelButton: true        
+        }).then((result) => {
+            let precios = totalCarro.reduce((a,b) => a + b)
+            result.value = result.value.toLowerCase()
+            if (result.value == "efectivo") {
+                swalWithBootstrapButtons.fire(
+                    'Pago aceptado',
+                    'Pagaste en efectivo un total de: $'+precios,
+                    'success'
+                  )
+                carrito.forEach(elm => {
+                    update_stock(elm, inputCompra.value);
+                })
+                reset_carrito()
+                borrarLocalStorage()
+            }
+            else if (result.value == "tarjeta"){
+                Swal.fire({
+                    title: "Cuotas",
+                    text: "Perfecto, abonas con tarjeta, elija las cuotas (3/6/9)",
+                    input: 'text',
+                    showCancelButton: true        
+                }).then((cuotas) => {
+                    if (cuotas.value) {
+                        cuotas.value = parseInt(cuotas.value);
+                        precio_cuotas(cuotas.value, precios);
+                        carritoSave.forEach(elm => {
+                            update_stock(elm, inputCompra.value);
+                        })
+                        reset_carrito()
+                        borrarLocalStorage()
+                    }
+                });
+            }
+            else {
+                swalWithBootstrapButtons.fire(
+                    'Error',
+                    'Por favor, elija un metodo de pago',
+                    'error'
+                  )
+            }
+        });
+    }    
+
 function eliminarProducto(id){
     let item = carrito.find(elm => elm.id == id)
     item.resta()
@@ -349,24 +417,26 @@ function eliminarProducto(id){
     carrito.splice(index, 1)
     renderCarrito() 
     }
+
     
+
 function precio_cuotas(cantCuotas, precios){
         if (cantCuotas === 3){ 
             let porcentaje_3 = (precios*15/100); // EL INTERES 15 %
             let precio_final = precios + porcentaje_3;
-            alert("El precio final de su compra es de "+precio_final);
+            alertaCuotas(precio_final, cantCuotas);
 
 
     }
         else if(cantCuotas === 6){
             let porcentaje_6 = (precios*35/100); // EL INTERES 35 %
             let precio_final = precios + porcentaje_6;
-            alert("El precio final de su compra es de "+precio_final);
+            alertaCuotas(precio_final, cantCuotas);
     }
         else if(cantCuotas === 9){
             let porcentaje_9 = (precios*50/100); // EL INTERES 50 %
             let precio_final = precios + porcentaje_9;
-            alert("El precio final de su compra es de "+precio_final);
+            alertaCuotas(precio_final, cantCuotas);
     }
 }
 
@@ -378,12 +448,69 @@ function update_stock(elm,cant){
 
     }
 
+function alertaCuotas(precio_final, cantCuotas){
+    swalWithBootstrapButtons.fire(
+        'Pago aceptado',
+        'Pagaste en ' +  cantCuotas + ' cuotas'  + ' un total de: $'+ precio_final,
+        'success'
+      )
+}
+
+function pagarSave (){
+    Swal.fire({
+        title: "Metodo de Pago",
+        text: "¿Desea pagar en efectivo o tarjeta?",
+        input: 'text',
+        showCancelButton: true        
+    }).then((result) => {
+        result.value = result.value.toLowerCase()
+        if (result.value == "efectivo") {
+            swalWithBootstrapButtons.fire(
+                'Pago aceptado',
+                'Pagaste en efectivo un total de: $'+sum,
+                'success'
+              )
+            carritoSave[0].forEach(elm => {
+                update_stock(elm, elm.cant);
+            })
+            reset_carrito()
+            borrarLocalStorage()
+        }
+        else if (result.value == "tarjeta"){
+            Swal.fire({
+                title: "Cuotas",
+                text: "Perfecto, abonas con tarjeta, elija las cuotas (3/6/9)",
+                input: 'text',
+                showCancelButton: true        
+            }).then((cuotas) => {
+                if (cuotas.value) {
+                    cuotas.value = parseInt(cuotas.value);
+                    precio_cuotas(cuotas.value, sum);
+                    carritoSave[0].forEach(elm => {
+                        update_stock(elm, elm.cant);
+                    })
+                    reset_carrito()
+                    borrarLocalStorage()
+                }
+            });
+        }
+        else {
+            swalWithBootstrapButtons.fire(
+                'Error',
+                'Por favor, elija un metodo de pago',
+                'error'
+              )
+        }
+    });
+}
 
  function reset_carrito () {
+    
         carrito = [];
         carritoSave = [];
         totalCarro = [];
         renderCarrito();
+        renderCarritoSave();
         document.querySelector ("#precio ").innerText = "$0";
     }
 
