@@ -319,6 +319,7 @@ function plantillas(lista_productos_ext) {
      </div>
         `
 
+        // LISTO INPUT! 
     })
 
 
