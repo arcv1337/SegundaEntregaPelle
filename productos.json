@@ -1,0 +1,75 @@
+[
+
+            {
+                "marca": "",
+                "nombre": "Fernandito",
+                "precio": 500,
+                "id": 1,
+                "stock": 10000,
+                "img": "images/fernandito.png",
+                "cant": ""
+            },
+            {
+                "marca": "",
+                "nombre": "Licor de Uva",
+                "precio": 700,
+                "id": 2,
+                "stock": 10000,
+                "img": "images/licordeuva.png",
+                "cant": ""
+            },
+            {
+                "marca": "",
+                "nombre": "Fernet Branca",
+                "precio": 950,
+                "id": 3,
+                "stock": 10000,
+                "img": "images/fernetbranca.png",
+                "cant": ""
+            },
+            {
+                "marca": "",
+                "nombre": "Speed c/Vodka",
+                "precio": 660,
+                "id": 4,
+                "stock": 10000,
+                "img": "images/speedvodka.png",
+                "cant": ""
+            },
+            {
+                "marca": "",
+                "nombre": "Jack Daniels",
+                "precio": 1200,
+                "id": 5,
+                "stock": 10000,
+                "img": "images/whiskey.png",
+                "cant": ""
+            },
+            {
+                "marca": "",
+                "nombre": "Baileys",
+                "precio": 2300,
+                "id": 6,
+                "stock": 10000,
+                "img": "images/baileys.png",
+                "cant": ""
+            },
+            {
+                "marca": "",
+                "nombre": "Sky",
+                "precio": 1500,
+                "id": 7,
+                "stock": 10000,
+                "img": "images/sky.png",
+                "cant": ""
+            },
+            {
+                "marca": "",
+                "nombre": "Absolut Vodka",
+                "precio": 3000,
+                "id": 8,
+                "stock": 10000,
+                "img": "images/absolutvodka.png",
+                "cant": ""
+            }  
+]

@@ -1,9 +1,13 @@
+
 const containerDeProductos = document.querySelector('#containerDeProductos');;
 const containerCarrito = document.querySelector('#containerCarrito');
 const vaciarCarrito = document.querySelector('#vaciarCarrito')
 const img_cart = document.getElementById("img-carrito");
 const pagar = document.querySelector('#pagar');
 const pagar_save = document.querySelector('#pagar_save');
+
+
+
 const swalWithBootstrapButtons = Swal.mixin({
     customClass: {
       confirmButton: 'btn btn-success',
@@ -27,50 +31,17 @@ let boton_2 = document.getElementById("proceso")
 boton_2.style.display = "none";
 img_cart.style.display = "none";
 titulo.style.color = "grey";
+inputCompra.style.display = "inline";
 pagar_save.style.display = "none";
 pagar.style.display = "none";
 
 // ARRAYS
 let lista_productos = [];
+let lista_productos_ext = [];
 let carrito = [];
 let totalCarro = [];
 let carritoSave = [];
-
-
-
-const objetos = [{
-    marca: "",
-    nombre: 'Fernandito',
-    precio: 500,
-    id: 1,
-    stock: 10000,
-    img: 'images/fernandito.png'
-},
-{
-    marca: "",
-    nombre: 'Licor de Uva',
-    precio: 700,
-    id: 2,
-    stock: 10000,
-    img: 'images/licordeuva.png'
-},
-{
-    marca: "",
-    nombre: 'Fernet Branca',
-    precio: 950,
-    id: 3,
-    stock: 10000,
-    img: 'images/fernetbranca.png'
-},
-{
-    marca: "",
-    nombre: 'Speed c/Vodka',
-    precio: 660,
-    id: 4,
-    stock: 10000,
-    img: 'images/speedvodka.png'
-},
-]
+let sum = 0;
 
 
 // CONSTRUCTOR
@@ -101,6 +72,21 @@ class Alcoholes {
         console.log(totalCarro)
     }
     
+}
+
+fetch("./productos.json")
+    .then ( response => response.json())
+    .then (data => {
+        productosRecieve(data)
+
+    })
+
+function productosRecieve(data){
+    console.log(lista_productos_ext);
+    data.forEach(element => {
+        lista_productos_ext.push(new Alcoholes(element))
+       
+    });
 }
 
 let boton2 = document.getElementById("boton2");
@@ -157,19 +143,16 @@ function valido_edad(){
         console.log(inputCompra);
         console.log("Logeo correcto");
         parrafo.innerText = `\nBienvenido/a a la Tienda ${nombre.value}`
-        objetos.forEach(elm => {
-            // console.log(elm)
-            lista_productos.push(new Alcoholes(elm))
 
-            plantillas(lista_productos)
+            plantillas(lista_productos_ext)
             formulario.style.display = "none";
             titulo.style.display = "none";
-        })
+        
         mensaje.append(parrafo);
         parrafo.style.fontFamily = "Verdana";
         parrafo.style.fontSize = "25px";
         parrafo.style.textAlign = "center";
-        parrafo.style.color = "white";
+        parrafo.style.color = "grey";
         recuCarrito()
         
     }
@@ -224,13 +207,13 @@ function saveCarrito(){
 
 
 function recuCarrito(){
-    img_cart.style.display = "inline";
     let carritoGuardado = localStorage.getItem("carrito_json");
     carritoGuardado = JSON.parse(carritoGuardado);
     console.log(carritoGuardado)
     carritoSave.push(carritoGuardado);
     console.log(carritoSave);
     if (carritoSave[0] != null){
+        img_cart.style.display = "inline";
         totalCarritoSave(carritoGuardado)
         renderCarritoSave() // LISTO
     }
@@ -260,10 +243,13 @@ function renderCarritoSave(){
     }
 }
 
+
 function addCarrito(id){
     carritoSave = [];
-    let productoEncontrado = lista_productos.filter(elm => elm.id == id)
+    let productoEncontrado = lista_productos_ext.filter(elm => elm.id == id)
     carrito.push(productoEncontrado[0])
+    console.log(productoEncontrado[0])
+    console.log(carrito[0]);
     productoEncontrado[0].total()
     console.log(productoEncontrado[0].total);
         totalCarrito()
@@ -271,13 +257,14 @@ function addCarrito(id){
         saveCarrito()
 }
 
+
 function totalCarrito() {
     let precios = totalCarro.reduce((a,b) => a + b)
     document.querySelector('#precio').innerHTML = `Total $${precios}`
     
 }
 
-let sum = 0;
+
 function totalCarritoSave(carritoGuardado){
     
     for (let i = 0; i < carritoGuardado.length; i++) {
@@ -293,39 +280,47 @@ function renderCarrito(){
     pagar.style.display = "inline";
     containerCarrito.innerHTML = ""
     carrito.forEach(elm => {
+        elm.cant = inputCompra.value
         containerCarrito.innerHTML += `
         <th>${elm.nombre}</th>
         <th>${elm.precio}</th>
         <th class="btnEliminar" data-id="${elm.id}">X</th>
-        <th>${inputCompra.value}</th>
+        <th>${elm.cant}</th>
         `
     })
 }
 
-
-function plantillas(lista_productos) {
-
+function plantillas(lista_productos_ext) {
     containerDeProductos.innerHTML = ""
-    lista_productos.forEach(elm => {
+    
+    lista_productos_ext.forEach(elm => {
+    
         containerDeProductos.innerHTML += `
+        
         <div class="card">
         <div class="card-img"<p class="text-title"></div><img src="./${elm.img}"  alt="imagen" class="tamaño"/>
         
         <div class="card-info">
           <p class="text-title"> ${elm.marca}  ${elm.nombre} </p>
-        </div>
+        </div> 
+        <div class="card-input">
+        <input id="inputCantidades" type="number" min="1" placeholder="cant">  
+          <p class="text-title"></p>
+        </div> 
         <div class="card-footer">
         <span class="text-title">$${elm.precio}</span>
         <div class="card-button">
-          <button id="${elm.id}" class="button">Agregar </button>
+          <button id="${elm.id}" class="button">Agregar</button>
         </div>
-
-      </div>
-      ID: ${elm.id}</div>
-        `
         
+      </div>
+        ID: ${elm.id}
+    
+     </div>
+        `
 
     })
+
 
     
 
@@ -527,4 +522,3 @@ vaciarCarrito.addEventListener('click', (e) => {
     } )
     
 }
-

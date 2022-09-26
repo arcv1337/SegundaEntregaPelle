@@ -11,7 +11,11 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
 
-
+#inputCantidades{
+  width: 100px;
+  text-align: center;
+}
+ 
  .footer {
   position: fixed;
     left: 0;
@@ -24,6 +28,11 @@
     font-family: 'Cambria italic', Courier, monospace;
     font-style:normal;
     font-size: 16px;
+ }
+
+
+ .texto {
+  color:rgb(53, 126, 43);
  }
 
 body {
@@ -51,9 +60,6 @@ body {
   
 }
 
-.nombreCant {
-
-}
 
 #precio {
   position: relative;
@@ -271,8 +277,11 @@ header .navbar {
  }
  
  .productosGrid{
-
+  position: relative;
+  right: 50px;
   display: grid;
-  grid-template-columns: repeat(2, 2fr);
+  grid-template-columns: 200px 200px 200px 200px;
+  grid-template-rows: 200px 200px 200px;
+  grid-gap: 8rem;
 
 }
