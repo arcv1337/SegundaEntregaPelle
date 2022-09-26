@@ -7,3 +7,4 @@
 - Operadores Avanzados
 - JSON Storage
 - Funciones de Orden Superior
+- Fetch
