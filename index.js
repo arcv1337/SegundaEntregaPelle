@@ -314,7 +314,7 @@ function plantillas(lista_productos_ext) {
         </div>
         
       </div>
-        ID: ${elm.id}
+       
     
      </div>
         `
