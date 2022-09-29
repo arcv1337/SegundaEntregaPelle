@@ -1,3 +1,5 @@
+// CONST
+
 
 const containerDeProductos = document.querySelector('#containerDeProductos');;
 const containerCarrito = document.querySelector('#containerCarrito');
@@ -5,9 +7,6 @@ const vaciarCarrito = document.querySelector('#vaciarCarrito')
 const img_cart = document.getElementById("img-carrito");
 const pagar = document.querySelector('#pagar');
 const pagar_save = document.querySelector('#pagar_save');
-
-
-
 const swalWithBootstrapButtons = Swal.mixin({
     customClass: {
       confirmButton: 'btn btn-success',
@@ -16,6 +15,8 @@ const swalWithBootstrapButtons = Swal.mixin({
     buttonsStyling: false
   })
 
+
+// GET & CREATE 
 
 let titulo = document.getElementById("titulo");
 let mensaje = document.getElementById("mensaje");
@@ -77,9 +78,8 @@ class Alcoholes {
 fetch("./productos.json")
     .then ( response => response.json())
     .then (data => {
-        productosRecieve(data)
-
-    })
+    productosRecieve(data)
+    });
 
 function productosRecieve(data){
     console.log(lista_productos_ext);
@@ -245,18 +245,45 @@ function renderCarritoSave(){
 
 
 function addCarrito(id){
-    carritoSave = [];
-    let productoEncontrado = lista_productos_ext.filter(elm => elm.id == id)
-    carrito.push(productoEncontrado[0])
-    console.log(productoEncontrado[0])
-    console.log(carrito[0]);
-    productoEncontrado[0].total()
-    console.log(productoEncontrado[0].total);
-        totalCarrito()
-        renderCarrito()
-        saveCarrito()
+   let check = new Promise(function(resolve,reject){
+        setTimeout(function(){
+            carritoSave = [];
+            if (carritoSave.length == 0){
+            resolve("Todo ok, el carrito estaba vacio")
+            let productoEncontrado = lista_productos_ext.filter(elm => elm.id == id)
+            carrito.push(productoEncontrado[0])
+            console.log(productoEncontrado[0])
+            console.log(carrito[0]);
+            productoEncontrado[0].total()
+            console.log(productoEncontrado[0].total);
+                totalCarrito()
+                renderCarrito()
+                saveCarrito()
+            } 
+            else {
+                reject("Algo anda mal")
+            }   
+            checkCarrito(check)
+            }
+            , 500)
+    })
+   
 }
 
+
+
+
+
+
+
+
+function checkCarrito(check){
+    check.then(function(mensaje){
+        console.log(mensaje)
+    }).catch(function(error){
+        console.log(error)
+    })
+}
 
 function totalCarrito() {
     let precios = totalCarro.reduce((a,b) => a + b)
@@ -322,8 +349,6 @@ function plantillas(lista_productos_ext) {
         // LISTO INPUT! 
     })
 
-
-    
 
 pagar.addEventListener('click', (e) =>{
     pagar_save.style.display = "none";
