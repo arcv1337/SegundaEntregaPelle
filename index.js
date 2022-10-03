@@ -18,6 +18,10 @@ const swalWithBootstrapButtons = Swal.mixin({
 
 // GET & CREATE 
 
+let obj = {
+    cant: 0
+}
+
 let titulo = document.getElementById("titulo");
 let mensaje = document.getElementById("mensaje");
 let compra = document.getElementById("compra");
@@ -32,7 +36,7 @@ let boton_2 = document.getElementById("proceso")
 boton_2.style.display = "none";
 img_cart.style.display = "none";
 titulo.style.color = "grey";
-inputCompra.style.display = "inline";
+inputCompra.style.display = "none";
 pagar_save.style.display = "none";
 pagar.style.display = "none";
 
@@ -66,28 +70,33 @@ class Alcoholes {
 
     }
     total() {
-        totalCarro.push(this.precio*inputCompra.value); 
+        totalCarro.push(this.precio*obj.cant); 
     }
     resta(){
-        totalCarro.push(-(this.precio*inputCompra.value))
+        totalCarro.push(-(this.precio*obj.cant))
         console.log(totalCarro)
     }
     
 }
 
-fetch("./productos.json")
-    .then ( response => response.json())
-    .then (data => {
-    productosRecieve(data)
-    });
-
-function productosRecieve(data){
-    console.log(lista_productos_ext);
-    data.forEach(element => {
-        lista_productos_ext.push(new Alcoholes(element))
-       
-    });
+const request = async () => {
+    try{
+        const response = await fetch('productos.json');
+        const data = await response.json();
+        console.log("Archivo encontrado")
+        console.log(data);
+        data.forEach(element => {
+            lista_productos_ext.push(new Alcoholes(element))
+        });
+    }
+    
+    catch(error){
+        console.log("Error: Archivo no encontrado");
+    }
 }
+request()
+
+
 
 let boton2 = document.getElementById("boton2");
 let boton3 = document.getElementById("boton3");
@@ -180,28 +189,24 @@ function valido_edad(){
 
 document.addEventListener('click', (e) => {
     if(e.target.classList.contains('button')){
-        
-        if (inputCompra.value == ""){
-            alert("Por favor, ingrese una cantidad antes de agregar");
-        }
-        else if (inputCompra.value == 0) {
-            alert("Ingrese un numero mayor a 0");
-        }
-        else {  
-        
+       if (obj.cant === 0){
+            console.log("El usuario ingreso una cantidad erronea")
+            alert("Por favor, ingrese una cantidad mayor a 0")
+       }
+       else{
         img_cart.style.display = "inline";
         addCarrito(e.target.id)
-}
+        }
     }
 })
 
 function saveCarrito(){
     carrito.forEach(elm => {
-        let productosGuardar = {marca: elm.marca, nombre: elm.nombre, precio: elm.precio, id: elm.id, stock: elm.stock, img: elm.img, cant: inputCompra.value}
+
+        let productosGuardar = {marca: elm.marca, nombre: elm.nombre, precio: elm.precio, id: elm.id, stock: elm.stock, img: elm.img, cant: elm.cant}
         carritoSave.push(productosGuardar);
         let carrito_json = JSON.stringify(carritoSave);
         localStorage.setItem("carrito_json", carrito_json);
-        console.log(carrito_json);
             })
 }
 
@@ -209,9 +214,7 @@ function saveCarrito(){
 function recuCarrito(){
     let carritoGuardado = localStorage.getItem("carrito_json");
     carritoGuardado = JSON.parse(carritoGuardado);
-    console.log(carritoGuardado)
     carritoSave.push(carritoGuardado);
-    console.log(carritoSave);
     if (carritoSave[0] != null){
         img_cart.style.display = "inline";
         totalCarritoSave(carritoGuardado)
@@ -232,7 +235,7 @@ function renderCarritoSave(){
             containerCarrito.innerHTML += `
             <th>${elm.nombre}</th>
             <th>${elm.precio}</th>
-            <th class="btnEliminar" data-id="${elm.id}">X</th>
+            <th class="btnEliminarSave" data-id="${elm.id}">X</th>
             <th>${elm.cant}</th>
             
             ` 
@@ -245,28 +248,24 @@ function renderCarritoSave(){
 
 
 function addCarrito(id){
-   let check = new Promise(function(resolve,reject){
-        setTimeout(function(){
+
             carritoSave = [];
             if (carritoSave.length == 0){
-            resolve("Todo ok, el carrito estaba vacio")
+            console.log(id);
+
             let productoEncontrado = lista_productos_ext.filter(elm => elm.id == id)
-            carrito.push(productoEncontrado[0])
-            console.log(productoEncontrado[0])
-            console.log(carrito[0]);
+
+            console.log(productoEncontrado)
+            carrito.push({marca: productoEncontrado[0].marca, nombre: productoEncontrado[0].nombre, precio: productoEncontrado[0].precio, id: productoEncontrado[0].id, stock: productoEncontrado[0].stock, img: productoEncontrado[0].img, cant:obj.cant})
+            console.log(carrito);
             productoEncontrado[0].total()
             console.log(productoEncontrado[0].total);
                 totalCarrito()
                 renderCarrito()
                 saveCarrito()
             } 
-            else {
-                reject("Algo anda mal")
-            }   
-            checkCarrito(check)
-            }
-            , 500)
-    })
+   
+
    
 }
 
@@ -287,7 +286,13 @@ function checkCarrito(check){
 
 function totalCarrito() {
     let precios = totalCarro.reduce((a,b) => a + b)
+    console.log(Math.sign(precios))
+    if (Math.sign(precios) == true){
     document.querySelector('#precio').innerHTML = `Total $${precios}`
+    }
+    else {
+        document.querySelector('#precio').innerHTML = `Total $${0}`
+    }
     
 }
 
@@ -307,7 +312,7 @@ function renderCarrito(){
     pagar.style.display = "inline";
     containerCarrito.innerHTML = ""
     carrito.forEach(elm => {
-        elm.cant = inputCompra.value
+        console.log(elm);
         containerCarrito.innerHTML += `
         <th>${elm.nombre}</th>
         <th>${elm.precio}</th>
@@ -331,7 +336,7 @@ function plantillas(lista_productos_ext) {
           <p class="text-title"> ${elm.marca}  ${elm.nombre} </p>
         </div> 
         <div class="card-input">
-        <input id="inputCantidades" type="number" min="1" placeholder="cant">  
+        <input id="inputCantidades" class="inputCantidades" type="number" min="1" placeholder="cant">  
           <p class="text-title"></p>
         </div> 
         <div class="card-footer">
@@ -349,6 +354,15 @@ function plantillas(lista_productos_ext) {
         // LISTO INPUT! 
     })
 
+
+
+    document.addEventListener('change', (e) => {
+        if (e.target.classList.contains('inputCantidades')) {
+            let cantidadComprada = e.target.value
+           obj.cant = cantidadComprada
+
+        }
+    })
 
 pagar.addEventListener('click', (e) =>{
     pagar_save.style.display = "none";
@@ -379,6 +393,9 @@ document.addEventListener('click', (e) => {
         if(e.target.classList.contains('btnEliminar')){
             eliminarProducto(e.target.dataset.id)
         }
+        else if(e.target.classList.contains('btnEliminarSave')) {
+            eliminarProductoSave(e.target.dataset.id)
+        }
     } )
 
 function pagar_first(){
@@ -397,7 +414,7 @@ function pagar_first(){
                     'success'
                   )
                 carrito.forEach(elm => {
-                    update_stock(elm, inputCompra.value);
+                    update_stock(elm, elm.cant);
                 })
                 reset_carrito()
                 borrarLocalStorage()
@@ -413,7 +430,7 @@ function pagar_first(){
                         cuotas.value = parseInt(cuotas.value);
                         precio_cuotas(cuotas.value, precios);
                         carritoSave.forEach(elm => {
-                            update_stock(elm, inputCompra.value);
+                            update_stock(elm, elm.cant);
                         })
                         reset_carrito()
                         borrarLocalStorage()
@@ -431,13 +448,31 @@ function pagar_first(){
     }    
 
 function eliminarProducto(id){
+    console.log(carrito)
+    console.log(totalCarro)
     let item = carrito.find(elm => elm.id == id)
-    item.resta()
+
+    totalCarro.push(-(item.precio*item.cant)) 
+    console.log(totalCarro)
     totalCarrito()
     let index = carrito.indexOf(item)
-    carrito.splice(index, 1)
+    carrito.splice(index, 1) 
     renderCarrito() 
     }
+
+function eliminarProductoSave(id){
+        
+        let filtro = carritoSave[0].filter(elm => elm.id == id)
+        console.log(filtro[0])
+
+    
+        totalCarro.push(-(filtro[0].precio*filtro[0].cant)) 
+        console.log(totalCarro)
+        totalCarrito()
+        let index = carritoSave.indexOf(filtro)
+        carritoSave.splice(index, 1) 
+        renderCarrito()  
+        }
 
     
 
@@ -538,7 +573,7 @@ function pagarSave (){
     
 vaciarCarrito.addEventListener('click', (e) => {
         e.preventDefault();
-        document.querySelector('#precio').innerText = "$0"
+        document.querySelector('#precio').innerText = "Total $0"
         borrarLocalStorage()
         carrito = []
         carritoSave = [];
