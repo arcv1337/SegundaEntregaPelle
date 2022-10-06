@@ -8,4 +8,4 @@
 - JSON Storage
 - Funciones de Orden Superior
 - Fetch
-- Async & Promises
+- Async
