@@ -45,6 +45,7 @@ let lista_productos = [];
 let lista_productos_ext = [];
 let carrito = [];
 let totalCarro = [];
+let totalCarroSave = [];
 let carritoSave = [];
 let sum = 0;
 
@@ -71,12 +72,14 @@ class Alcoholes {
     }
     total() {
         totalCarro.push(this.precio*obj.cant); 
+        totalCarroSave.push(this.precio*obj.cant)
     }
     resta(){
         totalCarro.push(-(this.precio*obj.cant))
-        console.log(totalCarro)
+        
     }
     
+
 }
 
 const request = async () => {
@@ -189,7 +192,7 @@ function valido_edad(){
 
 document.addEventListener('click', (e) => {
     if(e.target.classList.contains('button')){
-       if (obj.cant === 0){
+       if (obj.cant <= 0){
             console.log("El usuario ingreso una cantidad erronea")
             alert("Por favor, ingrese una cantidad mayor a 0")
        }
@@ -250,42 +253,21 @@ function renderCarritoSave(){
 function addCarrito(id){
 
             carritoSave = [];
-            if (carritoSave.length == 0){
-            console.log(id);
-
+        
             let productoEncontrado = lista_productos_ext.filter(elm => elm.id == id)
-
-            console.log(productoEncontrado)
             carrito.push({marca: productoEncontrado[0].marca, nombre: productoEncontrado[0].nombre, precio: productoEncontrado[0].precio, id: productoEncontrado[0].id, stock: productoEncontrado[0].stock, img: productoEncontrado[0].img, cant:obj.cant})
-            console.log(carrito);
             productoEncontrado[0].total()
-            console.log(productoEncontrado[0].total);
                 totalCarrito()
                 renderCarrito()
                 saveCarrito()
-            } 
    
 
    
-}
-
-
-
-
-
-
-
-
-function checkCarrito(check){
-    check.then(function(mensaje){
-        console.log(mensaje)
-    }).catch(function(error){
-        console.log(error)
-    })
 }
 
 function totalCarrito() {
     let precios = totalCarro.reduce((a,b) => a + b)
+    console.log(precios)
     console.log(Math.sign(precios))
     if (Math.sign(precios) == true){
     document.querySelector('#precio').innerHTML = `Total $${precios}`
@@ -298,12 +280,12 @@ function totalCarrito() {
 
 
 function totalCarritoSave(carritoGuardado){
-    
+
     for (let i = 0; i < carritoGuardado.length; i++) {
     sum += carritoGuardado[i].precio*carritoGuardado[i].cant;
     }
     console.log(sum);
-    
+    totalCarroSave.push(sum);
     document.querySelector('#precio').innerHTML = `Total $${sum}`
 }
 
@@ -448,33 +430,60 @@ function pagar_first(){
     }    
 
 function eliminarProducto(id){
-    console.log(carrito)
-    console.log(totalCarro)
     let item = carrito.find(elm => elm.id == id)
-
     totalCarro.push(-(item.precio*item.cant)) 
-    console.log(totalCarro)
     totalCarrito()
+
     let index = carrito.indexOf(item)
     carrito.splice(index, 1) 
+
     renderCarrito() 
     }
 
 function eliminarProductoSave(id){
-        
-        let filtro = carritoSave[0].filter(elm => elm.id == id)
-        console.log(filtro[0])
-
     
-        totalCarro.push(-(filtro[0].precio*filtro[0].cant)) 
-        console.log(totalCarro)
-        totalCarrito()
-        let index = carritoSave.indexOf(filtro)
-        carritoSave.splice(index, 1) 
-        renderCarrito()  
+        let filtro = carritoSave[0].find(prod => prod.id == id)
+        totalCarroSave.push(-(filtro.precio*filtro.cant)) 
+        let precios = totalCarroSave.reduce((a,b) => a + b)
+    
+  
+        if (Math.sign(precios) == true){
+            document.querySelector('#precio').innerHTML = `Total $${precios}`
+            }
+        else {
+                document.querySelector('#precio').innerHTML = `Total $${0}`
+            }
+
+        let index = carritoSave[0].indexOf(filtro)
+        carritoSave[0].splice(index, 1) 
+        
+        renderCarritoSave()  
         }
 
+
+/* function eliminarProductoSave(id){
+            let carritoGuardado = localStorage.getItem("carrito_json");
+            carritoGuardado = JSON.parse(carritoGuardado);
+            let filtro = carritoGuardado.find(prod => prod.id == id)
+            totalCarro.push(-(filtro.precio*filtro.cant)) 
+            
+            
+         /*    console.log(carritoGuardado)
+            
+            
+            console.log(precios)
+            console.log(totalCarro)
     
+            let index = carritoSave[0].indexOf(filtro)
+            console.log(index)
+            console.log(totalCarro)
+            carritoSave[0].splice(index, 1) 
+            console.log(totalCarro)
+            renderCarritoSave()    
+            }
+            */
+    
+     
 
 function precio_cuotas(cantCuotas, precios){
         if (cantCuotas === 3){ 
