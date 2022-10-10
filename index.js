@@ -86,15 +86,12 @@ const request = async () => {
     try{
         const response = await fetch('productos.json');
         const data = await response.json();
-        console.log("Archivo encontrado")
-        console.log(data);
         data.forEach(element => {
             lista_productos_ext.push(new Alcoholes(element))
         });
     }
     
     catch(error){
-        console.log("Error: Archivo no encontrado");
     }
 }
 request()
@@ -152,8 +149,6 @@ function valido_edad(){
         inputCompra.style.backgroundColor = "black";
         inputCompra.style.color = "red";
         compra.append(inputCompra);
-        console.log(inputCompra);
-        console.log("Logeo correcto");
         parrafo.innerText = `\nBienvenido/a a la Tienda ${nombre.value}`
 
             plantillas(lista_productos_ext)
@@ -178,7 +173,6 @@ function valido_edad(){
             parrafo.style.color = "orange";
         }
         else{
-        console.log("No sos mayor de edad");
         parrafo.innerText = "No sos mayor, proximamente sección para infantiles.";
         mensaje.append(parrafo);
         parrafo.style.fontFamily = "Verdana";
@@ -193,7 +187,7 @@ function valido_edad(){
 document.addEventListener('click', (e) => {
     if(e.target.classList.contains('button')){
        if (obj.cant <= 0){
-            console.log("El usuario ingreso una cantidad erronea")
+
             alert("Por favor, ingrese una cantidad mayor a 0")
        }
        else{
@@ -217,58 +211,75 @@ function saveCarrito(){
 function recuCarrito(){
     let carritoGuardado = localStorage.getItem("carrito_json");
     carritoGuardado = JSON.parse(carritoGuardado);
-    carritoSave.push(carritoGuardado);
-    if (carritoSave[0] != null){
-        img_cart.style.display = "inline";
+    if (carritoGuardado != null){
+    img_cart.style.display = "inline";
+    carritoGuardado.forEach(elm => {
+           
+            carrito.push(elm);
+            })
+        renderCarrito() // LISTO
         totalCarritoSave(carritoGuardado)
-        renderCarritoSave() // LISTO
-    }
+}
     else {
-        console.log("No había productos guardados");
+        console.log("No quedaron productos guardados")
     }
-}
+    }
 
 
-function renderCarritoSave(){
-    pagar.style.display = "none";
-    pagar_save.style.display = "inline";
-    containerCarrito.innerHTML = ""
-    if(carritoSave[0] != null){
-        carritoSave[0].forEach(elm => {
-            containerCarrito.innerHTML += `
-            <th>${elm.nombre}</th>
-            <th>${elm.precio}</th>
-            <th class="btnEliminarSave" data-id="${elm.id}">X</th>
-            <th>${elm.cant}</th>
-            
-            ` 
-        })
-    }
-    else{
-        containerCarrito.innerHTML = ""
-    }
-}
+
 
 
 function addCarrito(id){
 
             carritoSave = [];
-        
-            let productoEncontrado = lista_productos_ext.filter(elm => elm.id == id)
-            carrito.push({marca: productoEncontrado[0].marca, nombre: productoEncontrado[0].nombre, precio: productoEncontrado[0].precio, id: productoEncontrado[0].id, stock: productoEncontrado[0].stock, img: productoEncontrado[0].img, cant:obj.cant})
-            productoEncontrado[0].total()
-                totalCarrito()
-                renderCarrito()
-                saveCarrito()
+            let existe = false
+           
+           
+           let productoEncontrado = lista_productos_ext.filter(elm => elm.id == id)
+                carrito.forEach(prod => {
+                        if (prod.id == productoEncontrado[0].id){
+                        existe = true
+
+                        }
+                    }); 
+               
+                   if (existe == false) {
+                    carrito.push({marca: productoEncontrado[0].marca, nombre: productoEncontrado[0].nombre, precio: productoEncontrado[0].precio, id: productoEncontrado[0].id, stock: productoEncontrado[0].stock, img: productoEncontrado[0].img, cant:obj.cant})           
+                    productoEncontrado[0].total()
+                    totalCarrito()
+                    renderCarrito()
+                    saveCarrito()
+
+                   }
+                   else if (existe == true){
+                    obj.cant = parseInt(obj.cant)
+                    carrito.forEach(elemento => {
+                        elemento.cant = parseInt(elemento.cant)
+                        elemento.cant = elemento.cant + obj.cant
+                        productoEncontrado[0].total()
+                        totalCarrito()
+                        renderCarrito()
+                        saveCarrito()
+                    });
+                   }
+                   
+                   
+                  
+                  
+                   
+       
+
    
 
    
 }
 
+
+
+
 function totalCarrito() {
     let precios = totalCarro.reduce((a,b) => a + b)
-    console.log(precios)
-    console.log(Math.sign(precios))
+    
     if (Math.sign(precios) == true){
     document.querySelector('#precio').innerHTML = `Total $${precios}`
     }
@@ -284,8 +295,7 @@ function totalCarritoSave(carritoGuardado){
     for (let i = 0; i < carritoGuardado.length; i++) {
     sum += carritoGuardado[i].precio*carritoGuardado[i].cant;
     }
-    console.log(sum);
-    totalCarroSave.push(sum);
+    totalCarro.push(sum);
     document.querySelector('#precio').innerHTML = `Total $${sum}`
 }
 
@@ -294,7 +304,6 @@ function renderCarrito(){
     pagar.style.display = "inline";
     containerCarrito.innerHTML = ""
     carrito.forEach(elm => {
-        console.log(elm);
         containerCarrito.innerHTML += `
         <th>${elm.nombre}</th>
         <th>${elm.precio}</th>
@@ -374,9 +383,7 @@ pagar_save.addEventListener('click', (e) =>{
 document.addEventListener('click', (e) => {
         if(e.target.classList.contains('btnEliminar')){
             eliminarProducto(e.target.dataset.id)
-        }
-        else if(e.target.classList.contains('btnEliminarSave')) {
-            eliminarProductoSave(e.target.dataset.id)
+            console.log('eliminado');
         }
     } )
 
@@ -398,6 +405,7 @@ function pagar_first(){
                 carrito.forEach(elm => {
                     update_stock(elm, elm.cant);
                 })
+                document.querySelector('#precio').innerText = "Total $0"
                 reset_carrito()
                 borrarLocalStorage()
             }
@@ -414,6 +422,7 @@ function pagar_first(){
                         carritoSave.forEach(elm => {
                             update_stock(elm, elm.cant);
                         })
+                        document.querySelector('#precio').innerText = "Total $0"
                         reset_carrito()
                         borrarLocalStorage()
                     }
@@ -421,7 +430,7 @@ function pagar_first(){
             }
             else {
                 swalWithBootstrapButtons.fire(
-                    'Error',
+                    'Error',    
                     'Por favor, elija un metodo de pago',
                     'error'
                   )
@@ -430,59 +439,38 @@ function pagar_first(){
     }    
 
 function eliminarProducto(id){
+
+    console.log(id);
+
     let item = carrito.find(elm => elm.id == id)
-    totalCarro.push(-(item.precio*item.cant)) 
-    totalCarrito()
-
-    let index = carrito.indexOf(item)
-    carrito.splice(index, 1) 
-
-    renderCarrito() 
-    }
-
-function eliminarProductoSave(id){
-    
-        let filtro = carritoSave[0].find(prod => prod.id == id)
-        totalCarroSave.push(-(filtro.precio*filtro.cant)) 
-        let precios = totalCarroSave.reduce((a,b) => a + b)
-    
-  
-        if (Math.sign(precios) == true){
-            document.querySelector('#precio').innerHTML = `Total $${precios}`
-            }
-        else {
-                document.querySelector('#precio').innerHTML = `Total $${0}`
-            }
-
-        let index = carritoSave[0].indexOf(filtro)
-        carritoSave[0].splice(index, 1) 
         
-        renderCarritoSave()  
+        if (item.cant == 1){            
+            totalCarro.push(-(item.precio*item.cant)) 
+            totalCarrito()
+
+            let index = carrito.indexOf(item)
+            carrito.splice(index, 1) 
+
+            renderCarrito() 
+        }else {
+                let item = carrito.find(elm => elm.id == id)
+                item.cant -= 1
+               
+                totalCarro.push(-(item.precio)) 
+          
+                totalCarrito()
+                renderCarrito()
+                
+           
+            totalCarrito()
+            renderCarrito() 
         }
 
+    
+    }
 
-/* function eliminarProductoSave(id){
-            let carritoGuardado = localStorage.getItem("carrito_json");
-            carritoGuardado = JSON.parse(carritoGuardado);
-            let filtro = carritoGuardado.find(prod => prod.id == id)
-            totalCarro.push(-(filtro.precio*filtro.cant)) 
-            
-            
-         /*    console.log(carritoGuardado)
-            
-            
-            console.log(precios)
-            console.log(totalCarro)
-    
-            let index = carritoSave[0].indexOf(filtro)
-            console.log(index)
-            console.log(totalCarro)
-            carritoSave[0].splice(index, 1) 
-            console.log(totalCarro)
-            renderCarritoSave()    
-            }
-            */
-    
+
+
      
 
 function precio_cuotas(cantCuotas, precios){
@@ -538,6 +526,7 @@ function pagarSave (){
             carritoSave[0].forEach(elm => {
                 update_stock(elm, elm.cant);
             })
+            document.querySelector('#precio').innerText = "Total $0"
             reset_carrito()
             borrarLocalStorage()
         }
@@ -554,6 +543,7 @@ function pagarSave (){
                     carritoSave[0].forEach(elm => {
                         update_stock(elm, elm.cant);
                     })
+                    document.querySelector('#precio').innerText = "Total $0"
                     reset_carrito()
                     borrarLocalStorage()
                 }
@@ -575,20 +565,18 @@ function pagarSave (){
         carritoSave = [];
         totalCarro = [];
         renderCarrito();
-        renderCarritoSave();
-        document.querySelector ("#precio ").innerText = "$0";
+        document.querySelector('#precio').innerText = "Total $0";
     }
 
     
 vaciarCarrito.addEventListener('click', (e) => {
         e.preventDefault();
-        document.querySelector('#precio').innerText = "Total $0"
+        document.querySelector('#precio').innerText = "Total $0";
         borrarLocalStorage()
         carrito = []
         carritoSave = [];
         totalCarro = []
         renderCarrito() 
-        renderCarritoSave()
     } )
     
 }

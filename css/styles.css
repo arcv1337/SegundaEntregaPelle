@@ -21,7 +21,7 @@
     left: 0;
     bottom: 0;
     width: 100%;
-    background-color: #856031be;
+    background-color: #262323be;
     color:#fff;
     text-align: center;
     color: rgb(0, 0, 0);
@@ -32,7 +32,16 @@
 
 
  .texto {
-  color:rgb(53, 126, 43);
+   font-size: 25px;
+    font-weight: bold;
+    font-style: italic;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    text-transform: capitalize;
+    letter-spacing: 6px;
+    color: #b80935;
+    text-align:center;
+    word-spacing: 3px;
+    
  }
 
 body {
