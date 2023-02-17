@@ -1,4 +1,4 @@
-## Simulador de Ventas por Mayor, en proceso de finalización
+## Simulador de Ventas por Mayor
 
 ### Practicas aplicadas con éxito:
 - Uso de DOM
